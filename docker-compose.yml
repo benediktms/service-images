@@ -1,0 +1,39 @@
+version: "2.1"
+services:
+  postgres:
+    image: postgres:14
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+  postgres-for-tests:
+    image: postgres:14
+    volumes:
+      - ./data/pg_data_for_tests:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+  redis:
+    image: redis:6
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379
+  minio:
+    image: minio/minio
+    command: server /data
+    volumes:
+      - ./data/minio:/data
+    ports:
+      - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: FAKEKEY
+      MINIO_SECRET_KEY: FAKESECRET
+volumes:
+  pg_data:
+    driver: local
+  redis_data:
+    driver: local
