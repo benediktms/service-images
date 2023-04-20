@@ -32,8 +32,16 @@ services:
     environment:
       MINIO_ACCESS_KEY: FAKEKEY
       MINIO_SECRET_KEY: FAKESECRET
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    volumes:
+      - surrealdb_data:/data
+    ports:
+      - 8000:8000
 volumes:
   pg_data:
     driver: local
   redis_data:
+    driver: local
+  surrealdb_data:
     driver: local
