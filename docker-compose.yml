@@ -16,6 +16,18 @@ services:
       - 5433:5432
     environment:
       POSTGRES_PASSWORD: postgres
+  postgres-for-tests-unsafe:
+    image: postgres:14
+    volumes:
+      - type: tmpfs
+        target: /dbdata
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /dbdata
+      POSTGRES_DB: upp-test
+    command: postgres -c fsync=off -c full_page_writes=off -c shared_buffers=1024 -c max_connections=1000
   redis:
     image: redis:6
     volumes:
@@ -32,12 +44,6 @@ services:
     environment:
       MINIO_ACCESS_KEY: FAKEKEY
       MINIO_SECRET_KEY: FAKESECRET
-  surrealdb:
-    image: surrealdb/surrealdb:latest
-    volumes:
-      - surrealdb_data:/data
-    ports:
-      - 8000:8000
 volumes:
   pg_data:
     driver: local
